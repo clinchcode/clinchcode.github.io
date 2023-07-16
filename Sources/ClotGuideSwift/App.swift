@@ -1,7 +1,7 @@
 import TokamakDOM
 import ClotGuideSwiftLibrary
 
-@main
+//@main
 struct TokamakApp: App {
     var body: some Scene {
         WindowGroup("Tokamak App") {
