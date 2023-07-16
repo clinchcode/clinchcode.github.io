@@ -1,25 +1,4 @@
 name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  swiftwasm_deploy:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: swiftwasm/swiftwasm-action@v5.8
-        with:
-          shell-action: carton bundle
-      - uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./public
-      name: Deploy to GitHub Pages
-
 on:
   push:
     branches: [main]
@@ -44,13 +23,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./Bundle
-      - name: Setup SwiftWasm
-  # You may pin to the exact commit or the version.
-  # uses: swiftwasm/setup-swiftwasm@9d5280c67752310ac750ddcc4688fb9e75abc5b5
-        uses: swiftwasm/setup-swiftwasm@v1.2
-        with:
-    # Swift version to configure. Reads from .swift-version if unset. Use default value if both are absent.
-        swift-version: # optional
+      
           
   deploy:
     environment:
