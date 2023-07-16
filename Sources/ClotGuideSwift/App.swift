@@ -36,16 +36,7 @@ struct ContentView: View {
             NumberInputField(value: $ExtemA10, title: "Ex-Test A10", min: 0, max: 60)
             NumberInputField(value: $FibtemA10, title: "Fib-Test A10", min: 0, max: 40)
             
-            let notComplete = ExtemA10 == 0 ||
-            FibtemA10 == 0 ||
-            (heparin && HitemCT == 0 ) ||
-            IntemCT == 0 ||
-            ExtemCT == 0
-           
-                
-//                Toggle(isOn: $showResults) {
-//                    Text("Show Results")
-//                }
+       
             
                 Button {
                     if showResults{
