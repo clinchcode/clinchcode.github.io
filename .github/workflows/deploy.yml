@@ -7,7 +7,8 @@ on:
 jobs:
   swiftwasm_deploy:
     runs-on: ubuntu-22.04
-
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
 
@@ -21,6 +22,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           
-permissions:
-  contents: write
+
   
