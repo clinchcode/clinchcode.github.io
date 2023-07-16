@@ -13,26 +13,26 @@ jobs:
         with:
           shell-action: carton test
           
-  swiftwasm_deploy:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: swiftwasm/swiftwasm-action@v5.8
-        with:
-          shell-action: carton bundle
-      - uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./Bundle
-          
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./Bundle
-      
+    swiftwasm_deploy:
+      runs-on: ubuntu-22.04
+      permissions:
+        contents: write
+      steps:
+        - uses: actions/checkout@v3
+  
+        - uses: swiftwasm/swiftwasm-action@v5.8
+          with:
+            shell-action: carton bundle
+        - uses: actions/upload-pages-artifact@v1
+          with:
+            path: ./Bundle
+            
+        - name: Deploy
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./Bundle
+        
           
   deploy:
     environment:
