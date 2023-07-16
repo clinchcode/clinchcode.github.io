@@ -1,0 +1,17 @@
+name: Build and test with SwiftWasm
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  swiftwasm_build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: swiftwasm/swiftwasm-action@v5.8
+        with:
+          shell-action: carton test
