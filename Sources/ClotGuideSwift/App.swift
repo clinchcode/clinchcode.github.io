@@ -2,7 +2,7 @@ import TokamakDOM
 import ClotGuideSwiftLibrary
 
 //@main
-struct TokamakApp: App {
+struct ClotGuideSwift: App {
     var body: some Scene {
         WindowGroup("Tokamak App") {
             ContentView()
@@ -143,3 +143,5 @@ struct NumberInputField: View {
         }
     }
 }
+
+ClotGuideSwift.main()
