@@ -26,19 +26,19 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./Bundle
           
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
-      pages: write
-    needs: swiftwasm_deploy
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v2          
+  #deploy:
+  #  environment:
+  #    name: github-pages
+  #    url: ${{ steps.deployment.outputs.page_url }}
+  #  runs-on: ubuntu-latest
+  #  permissions:
+  #    contents: write
+  #    id-token: write
+  #    pages: write
+  #  needs: swiftwasm_deploy
+  #  steps:
+  #    - id: deployment
+  #      uses: actions/deploy-pages@v2          
 
           
 
