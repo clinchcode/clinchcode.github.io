@@ -6,17 +6,19 @@ on:
 
 jobs:
   swiftwasm_deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: swiftwasm/swiftwasm-action@v5.3
+      - uses: swiftwasm/swiftwasm-action@v5.8
         with:
           shell-action: carton bundle
-
+          
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./Bundle
+          
+  
