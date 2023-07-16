@@ -1,13 +1,10 @@
-name: Build and test with SwiftWasm
-
+name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
-  swiftwasm_build:
+    swiftwasm_build:
     runs-on: ubuntu-20.04
 
     steps:
@@ -15,14 +12,7 @@ jobs:
       - uses: swiftwasm/swiftwasm-action@v5.8
         with:
           shell-action: carton test
-
-
-name: Deploy to GitHub Pages
-on:
-  push:
-    branches: [main]
-
-jobs:
+          
   swiftwasm_deploy:
     runs-on: ubuntu-22.04
     permissions:
@@ -49,7 +39,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: swiftwasm_build
     steps:
       - id: deployment
         uses: actions/deploy-pages@v2          
