@@ -11,14 +11,9 @@ struct ClotGuideSwift: App {
 }
 
 struct ContentView: View {
-    
+    @StateObject var clotGuideVM = ClotGuideViewModel()
     @State var ExtemA10  = 0.0
     @State var showResults = false
-    @State var FibtemA10 = 0.0
-    @State var ExtemCT   = 0.0
-    @State var IntemCT   = 0.0
-    @State var HitemCT   = 0.0
-    @State var heparin   = false
     @State var disclaimer = false
     // private let resultWidth: CGFloat = 40
     
@@ -29,104 +24,151 @@ struct ContentView: View {
                 Toggle(isOn: $heparin) {
                     Text("Have you used heparin?")
                 }
-                NumberInputField(value: $ExtemCT, title: "Ex-Test CT", min: 0.0, max: 150)
-                NumberInputField(value: $IntemCT, title: "In-Test CT", min: 0.0, max: 400)
-                if heparin {
-                    NumberInputField(value: $HitemCT, title: "Hi Test CT", min: 0.0, max: 400)
-                }
-                NumberInputField(value: $ExtemA10, title: "Ex-Test A10", min: 0, max: 60)
-                NumberInputField(value: $FibtemA10, title: "Fib-Test A10", min: 0, max: 40)
                 
-                let notComplete = ExtemA10 == 0 ||
-                FibtemA10 == 0 ||
-                (heparin && HitemCT == 0 ) ||
-                IntemCT == 0 ||
-                ExtemCT == 0
-               
-                    
-    //                Toggle(isOn: $showResults) {
-    //                    Text("Show Results")
-    //                }
+                NumberInputField(value: $clotGuideVM.ExtemA10, title: "Ex-Test A10", min: 0, max: 60)
+                NumberInputField(value: $clotGuideVM.ExtemCT, title: "Ex-Test CT", min: 0.0, max: 150)
+                NumberInputField(value: $clotGuideVM.FibtemA10, title: "Fib-Test A10", min: 0, max: 40)
+                NumberInputField(value: $clotGuideVM.IntemCT, title: "In-Test CT", min: 0.0, max: 400)
+                NumberInputField(value: $clotGuideVM.HitemCT, title: "Hi Test CT", min: 0.0, max: 400)
                 
-                    Button {
-                        if showResults{
-                            ExtemCT = 0
-                            ExtemA10 = 0
-                            IntemCT = 0
-                            FibtemA10 = 0
-                            HitemCT = 0
-                            heparin = false
-                        }
-                        showResults.toggle()
-                    } label: {
-                        if showResults {
-                            Text("Reset")
-                        } else {
-                            Text("Show Results")
-                        }
+                
+//                let notComplete = ExtemA10 == 0 ||
+//                FibtemA10 == 0 ||
+//                (heparin && HitemCT == 0 ) ||
+//                IntemCT == 0 ||
+//                ExtemCT == 0
+//
+//
+                Button {
+                    if showResults{
+                        clotGuideVM.ExtemCT = 0
+                        clotGuideVM.ExtemA10 = 0
+                        clotGuideVM.IntemCT = 0
+                        clotGuideVM.FibtemA10 = 0
+                        clotGuideVM.HitemCT = 0
+                        heparin = false
                     }
+                    showResults.toggle()
+                } label: {
+                    if showResults {
+                        Text("Reset")
+                    } else {
+                        Text("Show Results")
+                    }
+                }
                 
                 Button("Disclaimer") {
                     disclaimer = true
                 }.foregroundColor(.red)
-                    
-              //  NavigationLink("Disclaimer", destination: DisclaimerView())
+                
+                //  NavigationLink("Disclaimer", destination: DisclaimerView())
                 
                 if showResults {
-                    Group{
-                        Divider()
-                        HStack{
-                            Text("Results").font(.title).fontWeight(.bold)
-                            Spacer()
-                        }
-                        if heparin {
-                            VStack(alignment: .leading){
-                                
-                                Text("Heparin Effects").fontWeight(.semibold)
-                                if HitemCT <= 211 && IntemCT >= 228 {
-                                    Text("Possible residual heparin effect").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
-                                } else {
-                                    Text("Unlikely residual heparin effect").foregroundColor(.white).padding().background(Color.green).cornerRadius(10)
-                                }
-                            }
+                    Divider()
+                    HStack{
+                        Text("Results").font(.title2)
+                        Spacer()
+                        Button {
+                            key = true
+                        } label: {
+                            Label("Show Key", systemImage: "key.fill")
                         }
                         
+                        Spacer()
+                    }.padding()
+                    
+                    //If Heparin used, show heparin effects
+                    if clotGuideVM.heparin {
                         VStack(alignment: .leading){
-                            Text("Platelets").fontWeight(.semibold)
-                            if ExtemA10 < 22 {
+                            
+                            Text("Heparin Effect").fontWeight(.semibold)
+                            if clotGuideVM.heparinEffect() {
+                                Text("Heparin Effect Likely").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
+                            } else {
+                                Text("Heparin Effect Unlikely").foregroundColor(.white).padding().background(Color.green).cornerRadius(10)
+                            }
+                        }
+                    }
+                    
+                    //Plt and Fib
+                    VStack(alignment: .leading){
+                        Text("Platelets and Fibrinogen").fontWeight(.semibold)
+                        if clotGuideVM.ExTestA10 < clotGuideVM.ExTestLowerLimit {
+                            if clotGuideVM.FibTestA10 >= clotGuideVM.FibTestMiddleLimit {
                                 Text("Platelets Low").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
-                            } else if ExtemA10 < 39 {
+                            } else {
+                                Text("Platelets & Fibrinogen Low").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
+                            }
+                            
+                        } else if clotGuideVM.ExTestA10 < clotGuideVM.ExTestMiddleLimit {
+                            
+                            if clotGuideVM.FibTestA10 < clotGuideVM.FibTestLowerLimit {
+                                VStack(alignment: .leading){
+                                    Text("Fibrinogen Low").foregroundColor(.white)
+                                    Text("Platelets possibly low").font(.caption).foregroundColor(.white)
+                                }.padding().background(Color.red).cornerRadius(10)
+                            } else if clotGuideVM.FibTestA10 < clotGuideVM.FibTestMiddleLimit {
+                                Text("Platelets & Fibrinogen Low").foregroundColor(.white).padding().background(Color.yellow).cornerRadius(10)
+                            } else {
                                 Text("Platelets Low").foregroundColor(.white).padding().background(Color.yellow).cornerRadius(10)
-                            } else {
-                                Text("Platelets OK").foregroundColor(.white).padding().background(Color.green).cornerRadius(10)
                             }
                             
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("Fibrinogen").fontWeight(.semibold)
-                            if FibtemA10 < 5 {
-                                Text("Fibrinogen Low").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
-                            } else if FibtemA10 < 8 {
+                        } else {
+                            
+                            if clotGuideVM.FibTestA10 < clotGuideVM.FibTestLowerLimit {
                                 Text("Fibrinogen Low").foregroundColor(.white).padding().background(Color.yellow).cornerRadius(10)
+                            }else{
+                                VStack(alignment: .leading){Text("Platelets & Fibrinogen OK").foregroundColor(.white)
+                                    Text("fibrinogen possibly low if microvascular bleeding persists").font(.caption).foregroundColor(.white)
+                                }.padding().background(Color.green).cornerRadius(10)
+                            }
+                        }
+                        
+                    }
+                    
+                    //Clotting Time Analysis
+                    VStack(alignment: .leading){
+                        Text("Clotting Time Analysis*").fontWeight(.semibold)
+                        
+                        if clotGuideVM.FibTestA10 < clotGuideVM.FibTestLowerLimit {
+                            if clotGuideVM.clottingTimeHighLong().contains(true) {
+                                
+                                Text("Fibringen Low").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
+                            } else if clotGuideVM.clottingTimeMediumLong().contains(true) {
+                                Text("Fibringen Low").foregroundColor(.white).padding().background(Color.yellow).cornerRadius(10)
                             } else {
-                                Text("Fibrinogen OK").foregroundColor(.white).padding().background(Color.green).cornerRadius(10)
+                                Text("Clotting Time OK").foregroundColor(.white).padding().background(Color.green).cornerRadius(10)
                             }
                             
                         }
                         
-                        VStack(alignment: .leading){
-                            Text("Clotting Factors").fontWeight(.semibold)
-                            if IntemCT > 300 || HitemCT > 300 || ExtemCT > 100 {
-                                Text("Clotting Factors Low").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
-                            } else if IntemCT > 240 || HitemCT > 240 || ExtemCT > 80 {
+                        if clotGuideVM.heparinEffect() {
+                            
+                            if clotGuideVM.clottingTimeHighLong().contains(true) {
+                                
+                                Text("Heparin Effect").foregroundColor(.white).padding().background(Color.red).cornerRadius(10)
+                            } else if clotGuideVM.clottingTimeMediumLong().contains(true) {
+                                Text("Heparin Effect").foregroundColor(.white).padding().background(Color.yellow).cornerRadius(10)
+                            } else {
+                                Text("Clotting Time OK").foregroundColor(.white).padding().background(Color.green).cornerRadius(10)
+                            }
+                        }
+                        
+                        if (clotGuideVM.FibTestA10 >= clotGuideVM.FibTestLowerLimit && !clotGuideVM.heparinEffect())
+                        {
+                            if clotGuideVM.clottingTimeHighLong().contains(true) {
+                                Text("Clotting Factors Low").foregroundColor(.white).padding().background(Color.yellow).cornerRadius(10)
+                            } else if clotGuideVM.clottingTimeMediumLong().contains(true) {
                                 Text("Clotting Factors Low").foregroundColor(.white).padding().background(Color.yellow).cornerRadius(10)
                             } else {
                                 Text("Clotting Factors OK").foregroundColor(.white).padding().background(Color.green).cornerRadius(10)
                             }
                         }
-                        
+                        Text("*Clotting Time can be unreliable and should be correlated with clincial picture").font(.caption)
                     }
+                    
+                    
+                    
                 }
                 
                 
@@ -134,16 +176,16 @@ struct ContentView: View {
             if disclaimer{
                 
                 ZStack{
-                    HStack{
+                    HStack(spacing: 0){
                         Rectangle().fill(Color.black)
                         Rectangle().fill(Color.black)
                     }
-                        VStack{
-                            Text("This project is only to be used as a guide to interpreting ROTEM and ClotPro.\nIt is based on NHS Lothian's ROTEM/ClotPro Algorithm.\nThis is NOT a substitute for clinical judgement,\nnor is it intended to advise what treatment to give.\nIt is intended to be used ONLY by trained professionals.").foregroundColor(.red).padding()
-                            Button("hide") {
-                                disclaimer = false
-                            }
+                    VStack{
+                        Text("This project is only to be used as a guide to interpreting ROTEM and ClotPro.\nIt is based on NHS Lothian's ROTEM/ClotPro Algorithm.\nThis is NOT a substitute for clinical judgement,\nnor is it intended to advise what treatment to give.\nIt is intended to be used ONLY by trained professionals.").foregroundColor(.red).padding()
+                        Button("hide") {
+                            disclaimer = false
                         }
+                    }
                     
                 }
             }
@@ -174,5 +216,72 @@ struct NumberInputField: View {
         }
     }
 }
+
+class ClotGuideViewModel: ObservableObject {
+    //input variables
+    @Published var ExTestA10  = 0.0
+    @Published var FibTestA10 = 0.0
+    @Published var ExTestCT   = 0.0
+    @Published var InTestCT   = 0.0
+    @Published var HiTestCT   = 0.0
+    @Published var heparin   = false
+    
+    //limits
+    @Published var ExTestLowerLimit = 22.0
+    @Published var ExTestMiddleLimit = 39.0
+    @Published var FibTestLowerLimit = 5.0
+    @Published var FibTestMiddleLimit = 8.0
+    @Published var heparinHiTestLimit = 211.0
+    @Published var heparinInTestLimit = 228.0
+    @Published var InTestCTUpperLimit = 300.0
+    @Published var InTestCTMediumLimit = 240.0
+    @Published var ExTestCTUpperLimit = 100.0
+    @Published var ExTestCTMediumLimit = 80.0
+    @Published var HiTestCTUpperLimit = 300.0
+    @Published var HiTestCTMediumLimit = 240.0
+    
+    init(){
+        self.ExTestA10  = 0.0
+        self.FibTestA10 = 0.0
+        self.ExTestCT   = 0.0
+        self.InTestCT   = 0.0
+        self.HiTestCT   = 0.0
+        self.heparin   = false
+        self.ExTestLowerLimit = 22.0
+        self.ExTestMiddleLimit = 39.0
+        self.FibTestLowerLimit = 5.0
+        self.FibTestMiddleLimit = 8.0
+        self.heparinHiTestLimit = 211.0
+        self.heparinInTestLimit = 228.0
+        self.InTestCTUpperLimit = 300.0
+        self.InTestCTMediumLimit = 240.0
+        self.ExTestCTUpperLimit = 100.0
+        self.ExTestCTMediumLimit = 80.0
+        self.HiTestCTUpperLimit = 300.0
+        self.HiTestCTMediumLimit = 240.0
+    }
+    
+    func heparinEffect() -> Bool {
+        return (HiTestCT <= heparinHiTestLimit && InTestCT >= heparinInTestLimit && heparin)
+    }
+    func clottingTimeMediumLong() -> [Bool]{
+        return [(InTestCT > InTestCTMediumLimit),( HiTestCT > HiTestCTMediumLimit),( ExTestCT > ExTestCTMediumLimit)]
+    }
+    func clottingTimeHighLong() -> [Bool] {
+        return [(InTestCT > InTestCTUpperLimit),( HiTestCT > HiTestCTUpperLimit),(ExTestCT > ExTestCTUpperLimit)]
+    }
+    
+    func notComplete() -> Bool {
+        return ExTestA10 < 1 ||
+        FibTestA10 < 1 ||
+        (heparin && HiTestCT < 1 ) ||
+        (heparin && InTestCT < 1) ||
+        ExTestCT < 1
+    }
+    
+}
+
+
+
 
 ClotGuideSwift.main()
