@@ -151,7 +151,7 @@ def server(input, output, session):
     @reactive.event(input.key)
     def _():
         m = ui.modal(
-            ui.HTML("<h1 style=color:red;>RED: Significant</h1><br><h1 style=color:yellow;>YELLOW: Significant if Bleeding or High Risk of Bleeding</h1><br><h1 style=color:green;>GREEN: Rule out other causes of coagulopathy*</h1><br>*Antiplatelets, LMWH, Warfarin, DOACs"),
+            ui.HTML("<h1 style=color:red;>RED: Significant</h1><br><h1 style=color:yellow;>YELLOW: Significant if Bleeding or High Risk of Bleeding</h1><br><h1 style=color:green;>GREEN: Rule out other causes of coagulopathy*</h1><br>*ROTEM/ClotPro does not detect the effect of Antiplatelets<br>*ROTEM/ClotPro has poor sensitivity for LMWH, Warfarin, DOACs"),
             title="Key",
             easy_close=True,
             footer=None,
