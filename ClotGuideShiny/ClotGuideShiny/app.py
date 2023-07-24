@@ -7,10 +7,10 @@ app_ui = ui.page_fluid(
     ui.navset_tab(
         ui.nav("Guide", 
             ui.input_switch("hepUsed", "Heparin Used?"),
-            ui.input_numeric("exTestCT", "Ex-Test CT", value = 50),
-            ui.input_numeric("inTestCT", "In-Test CT", value= 100),
-            ui.input_numeric("exTestA10", "Ex-Test A10", value= 50),
-            ui.input_numeric("fibTestA10", "Fib-Test A10", value = 15),
+            ui.input_numeric("exTestCT", "Ex-Test CT", value = 0),
+            ui.input_numeric("inTestCT", "In-Test CT", value= 0),
+            ui.input_numeric("exTestA10", "Ex-Test A10", value= 0),
+            ui.input_numeric("fibTestA10", "Fib-Test A10", value = 0),
             ui.row(
                 ui.column(10, ui.output_ui("hepCTSlider")),
             ),
@@ -44,7 +44,7 @@ def server(input, output, session):
     def hepCTSlider():
         if input.hepUsed():
             return ui.TagList(
-                ui.input_numeric("hiTestCT", "Hi-Test CT", value=100),
+                ui.input_numeric("hiTestCT", "Hi-Test CT", value=0),
             )
 
     @output
@@ -108,11 +108,19 @@ def server(input, output, session):
                     {"style": "font-weight: bold; color: orange"},
                     "Low Fibrinogen",
                            )
+            elif input.fibTestA10() < 10:
+                plt = ui.div(
+                    ui.row({"style": "font-weight: bold; color: green"},
+                    "OK Platelets and Fibrinogen*"),
+                    ui.row("*if ongoing bleeding may require more Fibrinogen")
+                    
+                           )
             else:
                 plt = ui.div(
                     {"style": "font-weight: bold; color: green"},
-                    "OK Platelets and Fibrinogen*",
-                           )
+                    "OK Platelets and Fibrinogen",
+                          )
+                    
             
             
         return plt
