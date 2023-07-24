@@ -90,13 +90,13 @@ def server(input, output, session):
             
             elif input.fibTestA10() < 8:
                 plt = ui.div(
-                    {"style": "font-weight: bold; color: yellow"},
+                    {"style": "font-weight: bold; color: orange"},
                     "Low Platelets and Fibrinogen",
                            )
                 
             else:
                 plt = ui.div(
-                    {"style": "font-weight: bold; color: yellow"},
+                    {"style": "font-weight: bold; color: orange"},
                     "Low Platelets",
                            )
                 
@@ -105,7 +105,7 @@ def server(input, output, session):
         
             if input.fibTestA10() < 5:
                plt = ui.div(
-                    {"style": "font-weight: bold; color: yellow"},
+                    {"style": "font-weight: bold; color: orange"},
                     "Low Fibrinogen",
                            )
             else:
@@ -134,7 +134,7 @@ def server(input, output, session):
         else:
             if input.inTestCT() > 240 or input.exTestCT() > 80:
                 cf = ui.div(
-                    {"style": "font-weight: bold; color: yellow"},
+                    {"style": "font-weight: bold; color: orange"},
                     "Low Clotting Factors",
                            )
             else:
@@ -160,7 +160,7 @@ def server(input, output, session):
     @reactive.event(input.key)
     def _():
         m = ui.modal(
-            ui.HTML("<h1 style=color:red;>RED: Significant</h1><br><h1 style=color:yellow;>YELLOW: Significant if Bleeding or High Risk of Bleeding</h1><br><h1 style=color:green;>GREEN: Rule out other causes of coagulopathy*</h1><br>*ROTEM/ClotPro does not detect the effect of Antiplatelets<br>*ROTEM/ClotPro has poor sensitivity for LMWH, Warfarin, DOACs"),
+            ui.HTML("<h1 style=color:red;>RED: Significant</h1><br><h1 style=color:orange;>Orange: Significant if Bleeding or High Risk of Bleeding</h1><br><h1 style=color:green;>GREEN: Rule out other causes of coagulopathy*</h1><br>*ROTEM/ClotPro does not detect the effect of Antiplatelets<br>*ROTEM/ClotPro has poor sensitivity for LMWH, Warfarin, DOACs"),
             title="Key",
             easy_close=True,
             footer=None,
