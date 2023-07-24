@@ -21,6 +21,7 @@ app_ui = ui.page_fluid(
             ui.row(
                 ui.column(10, ui.output_ui("plateletsandfibrinogen")),
             ),
+            ui.row(ui.div("---------")),
             ui.row(
                 ui.column(10, ui.output_ui("clottingTime")),
             ),
@@ -58,10 +59,13 @@ def server(input, output, session):
                     "",
                            )
             else:
-                hep = ui.div(
+                hep = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Heparin Effect",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: green"},
                     "Unlikely Heparin Effect",
-                           )
+                           )),ui.row(ui.div("---------"))
             return hep
             
 
@@ -73,53 +77,70 @@ def server(input, output, session):
         
         
             if input.fibTestA10() < 8:
-                plt = ui.div(
+                plt = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Fibrinogen and Platelets",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: red"},
                     "Very Low Fibrinogen and Platelets",
-                           )
+                           ))
             
             
         elif input.exTestA10() < 39:
         
         
             if input.fibTestA10() < 5:
-                plt = ui.div(
+                plt = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Fibrinogen and Platelets",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: red"},
                     "Very Low Fibrinogen, Low Platelets",
-                           )
+                ))
             
             elif input.fibTestA10() < 8:
-                plt = ui.div(
+                plt = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Fibrinogen and Platelets",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: orange"},
                     "Low Platelets and Fibrinogen",
-                           )
+                           ))
                 
             else:
-                plt = ui.div(
+                plt = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Fibrinogen and Platelets",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: orange"},
                     "Low Platelets",
-                           )
+                           ))
                 
         else:
         
         
             if input.fibTestA10() < 5:
-               plt = ui.div(
+               plt = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Fibrinogen and Platelets",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: orange"},
                     "Low Fibrinogen",
-                           )
+                           ))
             elif input.fibTestA10() < 10:
-                plt = ui.div(
-                    ui.row({"style": "font-weight: bold; color: green"},
-                    "OK Platelets and Fibrinogen*"),
-                    ui.row("*if ongoing bleeding may require more Fibrinogen")
-                    
-                           )
+                plt = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Fibrinogen and Platelets",
+                           )),ui.row(ui.div({"style": "font-weight: bold; color: green"},
+                    "OK Platelets and Fibrinogen*")),ui.row(ui.div("*if ongoing bleeding may require more Fibrinogen"))
             else:
-                plt = ui.div(
+                plt = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Fibrinogen and Platelets",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: green"},
                     "OK Platelets and Fibrinogen",
-                          )
+                          ))
                     
             
             
@@ -130,26 +151,39 @@ def server(input, output, session):
     @reactive.event(input.go)
     def clottingTime():
         if input.hepUsed() and (input.inTestCT() >= (228) and input.hiTestCT() <= (211.0)):
-            cf = ui.div(
+            cf = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Clotting Time Analysis",
+                           )),ui.row(ui.div(
                 {"style": "font-weight: bold; color: red"},
                 "Likely Residual Heparin Effect",
-                       )
+            ))
         elif input.fibTestA10() < 5:
-            cf = ui.div(
+            cf = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Clotting Time Analysis",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: red"},
-                    "Very Low Fibringoen",
-                           )
+                    "Low Fibringoen",
+                           ))
+                
         else:
             if input.inTestCT() > 240 or input.exTestCT() > 80:
-                cf = ui.div(
+                cf = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Clotting Time Analysis",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: orange"},
                     "Low Clotting Factors",
-                           )
+                ))
             else:
-                cf = ui.div(
+                cf = ui.row(ui.div(
+                    {"style": "font-weight: bold"},
+                    "Clotting Time Analysis",
+                           )),ui.row(ui.div(
                     {"style": "font-weight: bold; color: green"},
                     "Clotting Time OK",
-                           )
+                ))
     
         return cf
 
