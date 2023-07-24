@@ -4,28 +4,37 @@ app_ui = ui.page_fluid(
     {"style": "background-color: rgba(169, 169, 169, 0.7)"},
     ui.div({"style": "font-size: 300%;"},
         "ClotGuide",),
-    ui.input_switch("hepUsed", "Heparin Used?"),
-    ui.input_numeric("exTestCT", "Ex-Test CT", value = 50),
-    ui.input_numeric("inTestCT", "In-Test CT", value= 100),
-    ui.input_numeric("exTestA10", "Ex-Test A10", value= 50),
-    ui.input_numeric("fibTestA10", "Fib-Test A10", value = 15),
-    ui.row(
-        ui.column(10, ui.output_ui("hepCTSlider")),
-    ),
-    ui.input_action_button("go","Go", class_="btn-primary"),
-    ui.row(
-        ui.column(10, ui.output_ui("result")),
-    ),
-    ui.row(
-        ui.column(10, ui.output_ui("plateletsandfibrinogen")),
-    ),
-    ui.row(
-        ui.column(10, ui.output_ui("clottingTime")),
-    ),
-    ui.row(
-        ui.column(10, ui.input_action_link("key", "Key"))
-    ),
-    ui.input_action_link("show", "Disclaimer"),
+    ui.navset_tab(
+        ui.nav("Guide", 
+            ui.input_switch("hepUsed", "Heparin Used?"),
+            ui.input_numeric("exTestCT", "Ex-Test CT", value = 50),
+            ui.input_numeric("inTestCT", "In-Test CT", value= 100),
+            ui.input_numeric("exTestA10", "Ex-Test A10", value= 50),
+            ui.input_numeric("fibTestA10", "Fib-Test A10", value = 15),
+            ui.row(
+                ui.column(10, ui.output_ui("hepCTSlider")),
+            ),
+            ui.input_action_button("go","Go", class_="btn-primary"),
+            ui.row(
+                ui.column(10, ui.output_ui("result")),
+            ),
+            ui.row(
+                ui.column(10, ui.output_ui("plateletsandfibrinogen")),
+            ),
+            ui.row(
+                ui.column(10, ui.output_ui("clottingTime")),
+            ),
+            ui.row(
+                ui.column(10, ui.input_action_link("key", "Key"))
+            ),
+        ),
+        ui.nav("More",
+               ui.row(ui.input_action_link("about", "About")),
+               ui.row(ui.input_action_link("show", "Disclaimer")),
+               
+                   )
+        
+    )
 )
 
 
@@ -153,6 +162,17 @@ def server(input, output, session):
         m = ui.modal(
             ui.HTML("<h1 style=color:red;>RED: Significant</h1><br><h1 style=color:yellow;>YELLOW: Significant if Bleeding or High Risk of Bleeding</h1><br><h1 style=color:green;>GREEN: Rule out other causes of coagulopathy*</h1><br>*ROTEM/ClotPro does not detect the effect of Antiplatelets<br>*ROTEM/ClotPro has poor sensitivity for LMWH, Warfarin, DOACs"),
             title="Key",
+            easy_close=True,
+            footer=None,
+        )
+        ui.modal_show(m)
+        
+    @reactive.Effect
+    @reactive.event(input.about)
+    def _():
+        m = ui.modal(
+            ui.HTML("<h1>ClotGuide</h1><br><h4>Version 1.0</h4><br>ClotGuide was written by Nicholas Clinch<br><br>Currently Maintained by: Nicholas Clinch<br><br>Based on <i>NHS Lothian ROTEM/ClotPro Guidance Version 1.11</i><br>Last Updated: 18/08/2021"),
+            title="About",
             easy_close=True,
             footer=None,
         )
