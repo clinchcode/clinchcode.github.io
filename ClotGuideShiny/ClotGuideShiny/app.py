@@ -21,7 +21,7 @@ app_ui = ui.page_fluid(
             ui.row(
                 ui.column(10, ui.output_ui("plateletsandfibrinogen")),
             ),
-            ui.row(ui.div("---------")),
+            ui.row(ui.div("-----------------")),
             ui.row(
                 ui.column(10, ui.output_ui("clottingTime")),
             ),
@@ -60,12 +60,12 @@ def server(input, output, session):
                            )
             else:
                 hep = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Heparin Effect",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: green"},
+                    {"style": "font-weight: bold; color: white; background: green;"},
                     "Unlikely Heparin Effect",
-                           )),ui.row(ui.div("---------"))
+                           )),ui.row(ui.div("-----------------"))
             return hep
             
 
@@ -78,10 +78,10 @@ def server(input, output, session):
         
             if input.fibTestA10() < 8:
                 plt = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Fibrinogen and Platelets",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: red"},
+                    {"style": "font-weight: bold; color: white; background: red"},
                     "Very Low Fibrinogen and Platelets",
                            ))
             
@@ -91,28 +91,28 @@ def server(input, output, session):
         
             if input.fibTestA10() < 5:
                 plt = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Fibrinogen and Platelets",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: red"},
+                    {"style": "font-weight: bold; color: white; background: red"},
                     "Very Low Fibrinogen, Low Platelets",
                 ))
             
             elif input.fibTestA10() < 8:
                 plt = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Fibrinogen and Platelets",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: orange"},
+                    {"style": "font-weight: bold; color: white; background: orange"},
                     "Low Platelets and Fibrinogen",
                            ))
                 
             else:
                 plt = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Fibrinogen and Platelets",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: orange"},
+                    {"style": "font-weight: bold; color: white; background: orange"},
                     "Low Platelets",
                            ))
                 
@@ -121,24 +121,24 @@ def server(input, output, session):
         
             if input.fibTestA10() < 5:
                plt = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Fibrinogen and Platelets",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: orange"},
+                    {"style": "font-weight: bold; color: white; background: orange"},
                     "Low Fibrinogen",
                            ))
             elif input.fibTestA10() < 10:
                 plt = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Fibrinogen and Platelets",
-                           )),ui.row(ui.div({"style": "font-weight: bold; color: green"},
+                           )),ui.row(ui.div({"style": "font-weight: bold; color: white; background: green"},
                     "OK Platelets and Fibrinogen*")),ui.row(ui.div("*if ongoing bleeding may require more Fibrinogen"))
             else:
                 plt = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Fibrinogen and Platelets",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: green"},
+                    {"style": "font-weight: bold; color: white; background: green"},
                     "OK Platelets and Fibrinogen",
                           ))
                     
@@ -150,39 +150,39 @@ def server(input, output, session):
     @render.ui
     @reactive.event(input.go)
     def clottingTime():
-        if input.hepUsed() and (input.inTestCT() >= (228) and input.hiTestCT() <= (211.0)):
+        if input.inTestCT() <= 240 and input.exTestCT() <= 80:
             cf = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Clotting Time Analysis",
                            )),ui.row(ui.div(
-                {"style": "font-weight: bold; color: red"},
-                "Likely Residual Heparin Effect",
-            ))
-        elif input.fibTestA10() < 5:
-            cf = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
-                    "Clotting Time Analysis",
-                           )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: red"},
-                    "Low Fibringoen",
-                           ))
-                
-        else:
-            if input.inTestCT() > 240 or input.exTestCT() > 80:
-                cf = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
-                    "Clotting Time Analysis",
-                           )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: orange"},
-                    "Low Clotting Factors",
+                    {"style": "font-weight: bold; color: white; background: green"},
+                    "Clotting Time OK",
                 ))
+        else:
+            if input.hepUsed() and (input.inTestCT() >= (228) and input.hiTestCT() <= (211.0)):
+                cf = ui.row(ui.div(
+                        {"style": "font-weight: bold; background: white;"},
+                        "Clotting Time Analysis",
+                               )),ui.row(ui.div(
+                    {"style": "font-weight: bold; color: white; background: red"},
+                    "Likely Residual Heparin Effect",
+                ))
+            elif input.fibTestA10() < 5:
+                cf = ui.row(ui.div(
+                        {"style": "font-weight: bold; background: white;"},
+                        "Clotting Time Analysis",
+                               )),ui.row(ui.div(
+                        {"style": "font-weight: bold; color: white; background: red"},
+                        "Low Fibringoen",
+                               ))
+                    
             else:
                 cf = ui.row(ui.div(
-                    {"style": "font-weight: bold"},
+                    {"style": "font-weight: bold; background: white;"},
                     "Clotting Time Analysis",
                            )),ui.row(ui.div(
-                    {"style": "font-weight: bold; color: green"},
-                    "Clotting Time OK",
+                    {"style": "font-weight: bold; color: white; background: orange"},
+                    "Low Clotting Factors",
                 ))
     
         return cf
