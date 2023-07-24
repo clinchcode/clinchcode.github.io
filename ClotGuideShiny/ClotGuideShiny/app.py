@@ -8,9 +8,9 @@ app_ui = ui.page_fluid(
         ui.nav("Guide", 
             ui.input_switch("hepUsed", "Heparin Used?"),
             ui.input_numeric("exTestCT", "Ex-Test CT", value = 0),
-            ui.input_numeric("inTestCT", "In-Test CT", value= 0),
             ui.input_numeric("exTestA10", "Ex-Test A10", value= 0),
             ui.input_numeric("fibTestA10", "Fib-Test A10", value = 0),
+            ui.input_numeric("inTestCT", "In-Test CT", value= 0),
             ui.row(
                 ui.column(10, ui.output_ui("hepCTSlider")),
             ),
